@@ -1182,7 +1182,7 @@ export default function DoctorProfile({
                 decoding="async"
                 width="40"
                 height="40"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain antialiased"
               />
             ) : (
               <User className="w-5 h-5" style={{ color: themeTextColor, opacity: 0.8 }} />
