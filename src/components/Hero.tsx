@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { motion } from 'motion/react';
-import { ArrowLeft, Globe, Link, Share2, Clock, Monitor, Smartphone, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Globe, Link, Share2, Clock, Monitor, Smartphone, CheckCircle2, Users, User, UserCircle } from 'lucide-react';
 import { LandingPageConfig } from '../types';
 
 interface HeroProps {
@@ -183,30 +183,46 @@ export default function Hero({ onNavigate, landingConfig, currentLang = 'ar' }: 
             <div className="mt-6 sm:mt-7 flex items-center gap-1.5 sm:gap-2.5 justify-center lg:justify-start w-full max-w-fit mx-auto lg:mx-0">
               {/* Overlapping 4 doctor avatar circles - tighter overlap on mobile */}
               <div className="flex -space-x-3.5 sm:-space-x-4 rtl:space-x-reverse shrink-0 items-center">
-                <img 
-                  className="inline-block h-8 w-8 sm:h-10 sm:w-10 rounded-full ring-2 ring-white bg-slate-100 object-cover shrink-0 shadow-xs" 
-                  src="https://b.top4top.io/p_3877muh0n1.png" 
-                  alt="Doctor" 
-                  referrerPolicy="no-referrer"
-                />
-                <img 
-                  className="inline-block h-8 w-8 sm:h-10 sm:w-10 rounded-full ring-2 ring-white bg-slate-100 object-cover shrink-0 shadow-xs" 
-                  src="https://l.top4top.io/p_3877l7e661.png" 
-                  alt="Doctor" 
-                  referrerPolicy="no-referrer"
-                />
-                <img 
-                  className="inline-block h-8 w-8 sm:h-10 sm:w-10 rounded-full ring-2 ring-white bg-slate-100 object-cover shrink-0 shadow-xs" 
-                  src="https://l.top4top.io/p_38774iynl1.png" 
-                  alt="Doctor" 
-                  referrerPolicy="no-referrer"
-                />
-                <img 
-                  className="inline-block h-8 w-8 sm:h-10 sm:w-10 rounded-full ring-2 ring-white bg-slate-100 object-cover shrink-0 shadow-xs" 
-                  src="https://b.top4top.io/p_3877phl351.png" 
-                  alt="Doctor" 
-                  referrerPolicy="no-referrer"
-                />
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full ring-2 ring-white overflow-hidden bg-slate-100 shrink-0 shadow-md">
+                  <img 
+                    src="https://pyxpqudwqgaqahldsiwd.supabase.co/storage/v1/object/sign/Doctor%20Profile%20Image/98f0814a-9c17-4142-9996-a16dbedca22b.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9lYjNjNzhhZi00Njg3LTRhYzMtYTkyOC1jMTkyMTZhZDBjOWEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJEb2N0b3IgUHJvZmlsZSBJbWFnZS85OGYwODE0YS05YzE3LTQxNDItOTk5Ni1hMTZkYmVkY2EyMmIucG5nIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4NzQxMzczMywiZXhwIjoyMDcxMjM3NzMzfQ._jpQhlL77gAsqX_EK029ElBQquEZdHGjBy_7ePHtaus" 
+                    alt="Doctor 1" 
+                    loading="eager"
+                    decoding="async"
+                    className="high-res-img"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full ring-2 ring-white overflow-hidden bg-slate-100 shrink-0 shadow-md">
+                  <img 
+                    src="https://pyxpqudwqgaqahldsiwd.supabase.co/storage/v1/object/sign/Doctor%20Profile%20Image/646dd33e-f928-4bdc-972f-8b0d3d7e74e3.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9lYjNjNzhhZi00Njg3LTRhYzMtYTkyOC1jMTkyMTZhZDBjOWEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJEb2N0b3IgUHJvZmlsZSBJbWFnZS82NDZkZDMzZS1mOTI4LTRiZGMtOTcyZi04YjBkM2Q3ZTc0ZTMucG5nIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4NzQxNDA4MiwiZXhwIjoyMDcxMjM4MDgyfQ.QMl0lCUptSPiJiXMPb9jjfWLKYkgD8K-BwD6MICl8I0" 
+                    alt="Doctor 2" 
+                    loading="eager"
+                    decoding="async"
+                    className="high-res-img"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full ring-2 ring-white overflow-hidden bg-slate-100 shrink-0 shadow-md">
+                  <img 
+                    src="https://pyxpqudwqgaqahldsiwd.supabase.co/storage/v1/object/sign/Doctor%20Profile%20Image/f74f04de-2e85-4bdb-95cc-feb167b22556.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9lYjNjNzhhZi00Njg3LTRhYzMtYTkyOC1jMTkyMTZhZDBjOWEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJEb2N0b3IgUHJvZmlsZSBJbWFnZS9mNzRmMDRkZS0yZTg1LTRiZGItOTVjYy1mZWIxNjdiMjI1NTYuanBnIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4NzQxMzc1MywiZXhwIjoyMDcxMjM3NzUzfQ.C2WiIfSYWwmbkOkK8iqy0EraIfgryrg9-iWzNjXi3Ak" 
+                    alt="Doctor 3" 
+                    loading="eager"
+                    decoding="async"
+                    className="high-res-img"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full ring-2 ring-white overflow-hidden bg-slate-100 shrink-0 shadow-md">
+                  <img 
+                    src="https://pyxpqudwqgaqahldsiwd.supabase.co/storage/v1/object/sign/Doctor%20Profile%20Image/cf1a7471-e813-4d9c-8052-0b30465caa99.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9lYjNjNzhhZi00Njg3LTRhYzMtYTkyOC1jMTkyMTZhZDBjOWEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJEb2N0b3IgUHJvZmlsZSBJbWFnZS9jZjFhNzQ3MS1lODEzLTRkOWMtODA1Mi0wYjMwNDY1Y2FhOTkucG5nIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4NzQxNDAzMSwiZXhwIjoyMDcxMjM4MDMxfQ.dZQDojtyeOn0txPlqZON8hdJJjJxnDQwJg7YhcZd4gI" 
+                    alt="Doctor 4" 
+                    loading="eager"
+                    decoding="async"
+                    className="high-res-img"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
               </div>
 
               {/* Text */}
