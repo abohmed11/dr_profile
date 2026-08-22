@@ -1175,15 +1175,15 @@ export default function DoctorProfile({
             }}
           >
             {doctor.headerAvatar || doctor.avatar ? (
-              <img 
-                src={doctor.headerAvatar || doctor.avatar} 
-                alt={doctor.headerDisplayName || doctor.name} 
-                loading="eager"
-                decoding="async"
-                width="40"
-                height="40"
-                className="w-full h-full object-contain antialiased"
-              />
+              <div className="image-container">
+                <img 
+                  src={doctor.headerAvatar || doctor.avatar} 
+                  alt={doctor.headerDisplayName || doctor.name} 
+                  loading="eager"
+                  decoding="async"
+                  className="high-res-img"
+                />
+              </div>
             ) : (
               <User className="w-5 h-5" style={{ color: themeTextColor, opacity: 0.8 }} />
             )}

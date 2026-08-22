@@ -184,7 +184,9 @@ const ImageInputWithUpload = ({
           </button>
           {value && (
             <div className="flex items-center gap-2 bg-neutral-50 px-2 py-1 rounded-lg border border-neutral-200">
-              <img src={value} alt="Preview" className="w-16 h-16 object-contain antialiased" />
+              <div className="preview-image-container">
+                <img src={value} alt="Preview" className="high-res-img" />
+              </div>
               <span className="text-[10px] text-emerald-600 font-bold">معاينة الصورة</span>
             </div>
           )}
