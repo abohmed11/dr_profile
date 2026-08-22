@@ -17,6 +17,7 @@ import {
 } from '../lib/firebase';
 import { SOCIAL_PLATFORMS, SocialIcon, getEffectiveSocialLinks } from './SocialLinks';
 import SEOSettings from './SEOSettings';
+import ImageUploader from './ImageUploader';
 import DatabaseStatus from './DatabaseStatus';
 import ImportantPagesSettings from './ImportantPagesSettings';
 import InvoiceModal from './InvoiceModal';
@@ -789,6 +790,7 @@ export default function AdminPanel({
   const [adminCredsSuccessMsg, setAdminCredsSuccessMsg] = useState<string | null>(null);
   const [adminCredsErrorMsg, setAdminCredsErrorMsg] = useState<string | null>(null);
   const [isAdminCredsSaving, setIsAdminCredsSaving] = useState(false);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState('');
 
   useEffect(() => {
     if (landingConfig?.adminCredentials?.email) {
@@ -6992,6 +6994,18 @@ export default function AdminPanel({
               </form>
             </div>
             
+            {/* 2. Image Uploader Section */}
+            <div className="bg-white rounded-3xl border border-neutral-200/80 p-6 md:p-8 shadow-sm text-right space-y-6">
+              <h2 className="text-lg font-black text-neutral-900">رفع الصور (عالية الجودة)</h2>
+              <ImageUploader onUploadSuccess={(url) => setUploadedImageUrl(url)} />
+              {uploadedImageUrl && (
+                <div className="p-4 bg-neutral-50 rounded-2xl border border-neutral-200 space-y-2">
+                  <p className="text-xs font-bold text-neutral-700">رابط الصورة المرفوعة:</p>
+                  <input type="text" readOnly value={uploadedImageUrl} className="w-full p-2 bg-white border border-neutral-200 rounded-lg text-xs font-mono" />
+                </div>
+              )}
+            </div>
+
             {/* 2. Add Medical Specialty */}
             <div className="bg-white rounded-3xl border border-neutral-200/60 p-6 md:p-8 shadow-sm text-right space-y-6">
               <h2 className="text-lg font-black text-black">إضافة تخصص طبي جديد للنظام</h2>
