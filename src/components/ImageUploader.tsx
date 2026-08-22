@@ -48,14 +48,13 @@ export default function ImageUploader({ onUploadSuccess }: { onUploadSuccess: (u
     if (!file) return;
     const formData = new FormData();
     formData.append('file', file);
+    // Send file directly without compression to preserve quality
     uploadFile(formData, '/api/upload');
   };
 
   const handleUrlSubmit = () => {
     if (!url) return;
-    const formData = new FormData();
-    formData.append('url', url);
-    // URL upload needs JSON, not FormData
+    
     setIsUploading(true);
     setUploadStatus('idle');
     setErrorMessage('');
