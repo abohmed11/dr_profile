@@ -38,6 +38,12 @@ img, svg, picture, [data-prevent-save] {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  transform: translateZ(0);
+  width: auto;
+  height: auto;
+  max-width: 100%;
 }
 
 /* Protect avatar images and doctor profile banners specifically */
