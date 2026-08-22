@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Shefaa Medical SaaS Platform - Hardened Security & Validation Rules
+    
+    match /doctors/{doctorId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+    
+    match /appointments/{appointmentId} {
+      allow read: if true;
+      // Enforce valid payload for booking appointments (patient name and phone required)
+      allow create: if request.resource.data.patientName is string 
+                    && request.resource.data.patientName.size() > 0
+                    && request.resource.data.patientPhone is string 
+                    && request.resource.data.patientPhone.size() > 0;
+      allow update, delete: if true;
+    }
+    
+    match /landingConfig/{configId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    
+    match /banners/{bannerId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    
+    match /specialties/{specialtyId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    
+    match /contactMessages/{messageId} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}
+

@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Tajawal", "Cairo", "Alexandria", ui-sans-serif, system-ui, sans-serif;
+  --font-tajawal: "Tajawal", sans-serif;
+  --font-almarai: "Tajawal", sans-serif;
+  --font-alexandria: "Tajawal", sans-serif;
+  --font-cairo: "Tajawal", sans-serif;
+}
+
+html, body {
+  scroll-behavior: smooth;
+  font-family: "Tajawal", sans-serif !important;
+  direction: rtl;
+  touch-action: pan-x pan-y;
+  -webkit-text-size-adjust: 100%;
+}
+
+#root {
+  touch-action: pan-x pan-y;
+}
+
+body {
+  background-color: #fafafa;
+  color: #111111;
+  overflow-x: hidden;
+}
+
+/* Protect images from being dragged, right-clicked, or copied */
+img, svg, picture, [data-prevent-save] {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Protect avatar images and doctor profile banners specifically */
+.doctor-avatar, .doctor-banner, .profile-image, .demo-avatar {
+  pointer-events: auto;
+  -webkit-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+/* Custom transparent light blue text selection highlight */
+::selection {
+  background-color: rgba(125, 211, 252, 0.35); /* Transparent light blue */
+  color: inherit;
+}
+
+::-moz-selection {
+  background-color: rgba(125, 211, 252, 0.35);
+  color: inherit;
+}
+
+/* Custom premium scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Glass effect helpers */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-panel-dark {
+  background: rgba(15, 15, 15, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Subtle bounce animation for indicators */
+@keyframes soft-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-soft-bounce {
+  animation: soft-bounce 2s infinite ease-in-out;
+}
+
+/* Custom premium badge animations */
+@keyframes bounce-short {
+  0%, 100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -4px);
+  }
+}
+
+.animate-bounce-short {
+  animation: bounce-short 1.5s ease-in-out infinite;
+}
+
+@keyframes premium-badge-pulse {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.08) rotate(5deg);
+  }
+}
+
+.animate-premium-badge {
+  animation: premium-badge-pulse 2.5s ease-in-out infinite;
+}
+

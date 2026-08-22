@@ -1,0 +1,89 @@
+{
+  "collections": {
+    "doctors": {
+      "description": "Stores doctor profiles, clinic details, services, branches, and secretaries",
+      "fields": {
+        "id": { "type": "string", "description": "Unique doctor ID" },
+        "name": { "type": "string", "description": "Doctor Arabic name" },
+        "nameEn": { "type": "string", "description": "Doctor English slug name" },
+        "specialty": { "type": "string", "description": "Specialty code" },
+        "jobTitle": { "type": "string", "description": "Professional title" },
+        "email": { "type": "string", "description": "Email address" },
+        "phone": { "type": "string", "description": "Phone number" },
+        "whatsapp": { "type": "string", "description": "WhatsApp number" },
+        "avatar": { "type": "string", "description": "Avatar image URL" },
+        "bio": { "type": "string", "description": "Doctor biography" },
+        "experience": { "type": "number", "description": "Years of experience" },
+        "branches": { "type": "array", "description": "List of clinic branches" },
+        "services": { "type": "array", "description": "List of services" },
+        "workingHours": { "type": "array", "description": "Working hours schedule" },
+        "gallery": { "type": "array", "description": "Gallery image URLs" },
+        "videos": { "type": "array", "description": "Video URLs" },
+        "reviews": { "type": "array", "description": "Patient reviews" },
+        "socials": { "type": "map", "description": "Social media links" },
+        "isActiveSubscription": { "type": "boolean", "description": "Subscription status" },
+        "registeredAt": { "type": "string", "description": "Registration ISO date" },
+        "approvalStatus": { "type": "string", "description": "pending, approved, or rejected" },
+        "subscriptionType": { "type": "string", "description": "6months or annual" }
+      }
+    },
+    "appointments": {
+      "description": "Patient clinic appointment bookings",
+      "fields": {
+        "id": { "type": "string", "description": "Appointment ID" },
+        "doctorId": { "type": "string", "description": "Target doctor ID" },
+        "patientName": { "type": "string", "description": "Patient full name" },
+        "patientPhone": { "type": "string", "description": "Patient phone number" },
+        "whatsappNumber": { "type": "string", "description": "Patient WhatsApp number" },
+        "date": { "type": "string", "description": "Appointment date YYYY-MM-DD" },
+        "time": { "type": "string", "description": "Appointment time HH:mm" },
+        "branchId": { "type": "string", "description": "Selected branch ID" },
+        "status": { "type": "string", "description": "pending, approved, or rejected" },
+        "notes": { "type": "string", "description": "Notes" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      }
+    },
+    "landingConfig": {
+      "description": "SaaS Platform landing page and global settings configuration",
+      "fields": {
+        "hero": { "type": "map", "description": "Hero section content" },
+        "features": { "type": "map", "description": "Features section content" },
+        "pricing": { "type": "map", "description": "Pricing plans" },
+        "faq": { "type": "map", "description": "FAQ items" },
+        "contact": { "type": "map", "description": "Contact & WhatsApp config" },
+        "seo": { "type": "map", "description": "SEO settings" }
+      }
+    },
+    "banners": {
+      "description": "Doctor announcements and platform notification banners",
+      "fields": {
+        "id": { "type": "string", "description": "Banner ID" },
+        "title": { "type": "string", "description": "Title" },
+        "description": { "type": "string", "description": "Description" },
+        "color": { "type": "string", "description": "Theme color" },
+        "isActive": { "type": "boolean", "description": "Is active flag" },
+        "priority": { "type": "number", "description": "Display order" }
+      }
+    },
+    "specialties": {
+      "description": "Medical specialties list",
+      "fields": {
+        "id": { "type": "string", "description": "Specialty code" },
+        "name": { "type": "string", "description": "Arabic title" },
+        "count": { "type": "number", "description": "Doctor count" }
+      }
+    },
+    "contactMessages": {
+      "description": "Visitor contact form messages for platform administration",
+      "fields": {
+        "id": { "type": "string", "description": "Unique message ID" },
+        "name": { "type": "string", "description": "Sender full name" },
+        "email": { "type": "string", "description": "Sender email address" },
+        "phone": { "type": "string", "description": "Sender phone number" },
+        "message": { "type": "string", "description": "Message body" },
+        "createdAt": { "type": "string", "description": "Creation ISO date" },
+        "read": { "type": "boolean", "description": "Read status" }
+      }
+    }
+  }
+}
