@@ -265,8 +265,8 @@ export async function saveDoctorInDb(doctor: Doctor): Promise<void> {
   if (isFirestoreQuotaExceeded || !db) return;
   try {
     const docRef = doc(db, DOCTORS_COL, doctor.id);
-    // Sanitize any undefined values to null for Firestore safety
-    const cleanDoc = JSON.parse(JSON.stringify(doctor));
+    // Compress images to high quality (1200x1200, 0.9) to preserve high resolution while fitting Firestore 1MB limit
+    const cleanDoc = await compressObjectImages(doctor, 1200, 1200, 0.9);
     
     try {
       await setDoc(docRef, cleanDoc, { merge: true });
@@ -278,9 +278,10 @@ export async function saveDoctorInDb(doctor: Doctor): Promise<void> {
       console.warn('Full doctor save to Firestore failed, attempting lighter fallback:', docErr);
       const lighterDoc = {
         ...cleanDoc,
-        gallery: (cleanDoc.gallery || []).slice(0, 5),
-        galleryItems: (cleanDoc.galleryItems || []).slice(0, 5),
-        reviews: (cleanDoc.reviews || []).slice(0, 10),
+        gallery: (cleanDoc.gallery || []).slice(0, 3),
+        galleryItems: (cleanDoc.galleryItems || []).slice(0, 3),
+        reviews: (cleanDoc.reviews || []).slice(0, 5),
+        patients: (cleanDoc.patients || []).slice(0, 10),
       };
       await setDoc(docRef, lighterDoc, { merge: true });
     }

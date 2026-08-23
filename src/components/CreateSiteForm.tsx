@@ -180,7 +180,7 @@ export default function CreateSiteForm({
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const compressed = await compressImage(file, 400, 400, 0.75);
+      const compressed = await compressImage(file, 1200, 1200, 0.9);
       setAvatarUrl(compressed);
       setErrors(prev => {
         const next = { ...prev };
@@ -204,7 +204,7 @@ export default function CreateSiteForm({
 
     let finalAvatar = avatarUrl || 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=300';
     if (avatarUrl && avatarUrl.startsWith('data:image')) {
-      finalAvatar = await compressImage(avatarUrl, 400, 400, 0.75);
+      finalAvatar = await compressImage(avatarUrl, 1200, 1200, 0.9);
     }
 
     const selectedSpecObj = specialties.find(s => s.id === specialty);
