@@ -275,7 +275,15 @@ export async function saveDoctorInDb(doctor: Doctor): Promise<void> {
         handleFirestoreError(docErr, OperationType.WRITE, `${DOCTORS_COL}/${doctor.id}`);
         return;
       }
-      console.error('Full doctor save to Firestore failed, not applying dangerous truncation:', docErr);
+      
+      // Attempt aggressive fallback if initial save failed (likely size limit)
+      console.warn('Full doctor save to Firestore failed, attempting aggressive fallback:', docErr);
+      try {
+        const ultraCleanDoc = await compressObjectImages(doctor, 300, 300, 0.5);
+        await setDoc(docRef, ultraCleanDoc, { merge: true });
+      } catch (fallbackErr) {
+        console.error('Even aggressive save failed:', fallbackErr);
+      }
     }
   } catch (error) {
     handleFirestoreError(error, OperationType.WRITE, `${DOCTORS_COL}/${doctor.id}`);
