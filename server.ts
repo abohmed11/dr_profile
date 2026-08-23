@@ -86,8 +86,7 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    // In production, __dirname is the directory of server.cjs (which is /dist)
-    const distPath = __dirname;
+    const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
     app.get("*", (_req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
