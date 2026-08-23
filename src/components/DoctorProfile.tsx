@@ -392,7 +392,7 @@ function ThemePatternWatermark({
 }
 
 interface DoctorProfileProps {
-  doctor: Doctor;
+  doctor: Doctor | null | undefined;
   appointments: Appointment[];
   onAddAppointment: (newApt: Appointment) => void;
   onAddReview: (doctorId: string, newReview: Review) => void;
@@ -403,6 +403,14 @@ interface DoctorProfileProps {
 export default function DoctorProfile({ 
   doctor, appointments, onAddAppointment, onAddReview, onBackToPortal, isEmbeddedPreview = false
 }: DoctorProfileProps) {
+  if (!doctor) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center bg-gray-50">
+         <div className="w-16 h-16 border-4 border-t-blue-500 border-gray-200 rounded-full animate-spin"></div>
+         <p className="mt-4 text-xl font-bold text-gray-700">جاري تحميل البيانات...</p>
+      </div>
+    );
+  }
   
   const docFeatures = doctor.features || DEFAULT_DOCTOR_FEATURES;
   const activeTemplate = getThemeTemplate(doctor.themeTemplate);
