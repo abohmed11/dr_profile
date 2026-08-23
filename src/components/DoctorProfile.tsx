@@ -408,13 +408,89 @@ export default function DoctorProfile({
   const [doctor, setDoctor] = useState<Doctor | null | undefined>(initialDoctor);
 
   useEffect(() => {
-    if (doctorId) {
-      const unsub = subscribeDoctorById(doctorId, (docData) => {
-        setDoctor(docData);
-      });
-      return unsub;
-    }
+    let isMounted = true;
+    
+    // 1. Try Firestore
+    const unsub = subscribeDoctorById(doctorId, (docData) => {
+      if (isMounted) {
+        if (docData) {
+          setDoctor(docData);
+        } else {
+          // If Firestore returns null, try Supabase fallback
+          fetchFromSupabase(doctorId).then(supaData => {
+            if (isMounted && supaData) setDoctor(supaData);
+          });
+        }
+      }
+    });
+
+    // 2. Fallback timeout for Supabase
+    const timer = setTimeout(() => {
+      if (isMounted && !doctor) {
+        fetchFromSupabase(doctorId).then(supaData => {
+          if (isMounted && supaData) setDoctor(supaData);
+        });
+      }
+    }, 3000);
+
+    return () => {
+      isMounted = false;
+      unsub();
+      clearTimeout(timer);
+    };
   }, [doctorId]);
+
+  // Helper to fetch from Supabase
+  const fetchFromSupabase = async (id: string): Promise<Doctor | null> => {
+    try {
+      const { getSupabaseClient } = await import('../lib/supabase');
+      const client = getSupabaseClient();
+      if (!client) return null;
+      
+      const { data, error } = await client.from('doctors').select('*').eq('id', id).single();
+      if (error || !data) return null;
+      
+      // Map Supabase row to Doctor type (same mapping as fetchDoctorsFromSupabase)
+      return {
+        id: data.id,
+        name: data.name,
+        nameEn: data.name_en || data.nameEn || data.id,
+        specialty: data.specialty,
+        jobTitle: data.job_title || data.jobTitle || '',
+        email: data.email || '',
+        phone: data.phone || '',
+        whatsapp: data.whatsapp || '',
+        avatar: data.avatar || '',
+        bio: data.bio || '',
+        experience: data.experience || 0,
+        branches: Array.isArray(data.branches) ? data.branches : [],
+        services: Array.isArray(data.services) ? data.services : [],
+        workingHours: Array.isArray(data.working_hours) ? data.working_hours : [],
+        gallery: Array.isArray(data.gallery) ? data.gallery : [],
+        galleryItems: Array.isArray(data.gallery_items) ? data.gallery_items : [],
+        videos: Array.isArray(data.videos) ? data.videos : [],
+        reviews: Array.isArray(data.reviews) ? data.reviews : [],
+        socials: data.socials || {},
+        secretaries: Array.isArray(data.secretaries) ? data.secretaries : [],
+        isActiveSubscription: data.is_active_subscription ?? true,
+        registeredAt: data.registered_at || new Date().toISOString(),
+        subscriptionEndDate: data.subscription_end_date || '',
+        approvalStatus: data.approval_status || 'approved',
+        rejectionReason: data.rejection_reason || '',
+        subscriptionType: data.subscription_type || '6months',
+        isVerified: data.is_verified ?? false,
+        whiteLabel: data.white_label ?? false,
+        features: data.features || {},
+        certificates: Array.isArray(data.certificates) ? data.certificates : [],
+        siteType: data.site_type || 'profile',
+        headerDisplayName: data.header_display_name || '',
+        headerAvatar: data.header_avatar || ''
+      } as Doctor;
+    } catch (e) {
+      console.error('Supabase fallback error:', e);
+      return null;
+    }
+  };
 
   if (!doctor) {
     return (
