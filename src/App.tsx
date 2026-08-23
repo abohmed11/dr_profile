@@ -330,26 +330,7 @@ export default function App() {
   const [viewingDoctorEn, setViewingDoctorEn] = useState<string | null>(null);
 
   // Global dynamic states
-  const [doctors, setDoctors] = useState<Doctor[]>(() => {
-    try {
-      const saved = localStorage.getItem('dr_doctors');
-      let baseDocs: Doctor[] = INITIAL_DOCTORS || [];
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          baseDocs = parsed;
-        }
-      }
-      // Filter out previous demo doctors and normalize subscription dates
-      const cleaned = baseDocs
-        .filter(d => !d.id.startsWith('demo-doc-') && d.nameEn !== 'dr-ahmed-soliman' && d.nameEn !== 'dr-sarah-elsherif')
-        .map(d => sanitizeDoctorDates(d));
-      return cleaned;
-    } catch (e) {
-      console.error("Failed to load saved doctors", e);
-    }
-    return [];
-  });
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
 
   const [appointments, setAppointments] = useState<Appointment[]>(() => {
     try {
@@ -583,39 +564,7 @@ export default function App() {
     // Subscribe to Firestore collections in real-time
     const unsubDoctors = subscribeDoctors((fireDocs) => {
       setDoctors(prev => {
-        const map = new Map<string, Doctor>();
-        // Keep existing local doctors first
-        prev.forEach(d => map.set(d.id, d));
-        // Merge incoming remote firestore doctors
-        fireDocs.map(d => sanitizeDoctorDates(d)).forEach(fireDoc => {
-          const localDoc = map.get(fireDoc.id);
-          if (!localDoc) {
-            map.set(fireDoc.id, fireDoc);
-          } else {
-            const mergedDoc: Doctor = sanitizeDoctorDates({
-              ...localDoc,
-              ...fireDoc,
-              services: (fireDoc.services && fireDoc.services.length > 0) ? fireDoc.services : (localDoc.services || []),
-              galleryItems: (fireDoc.galleryItems && fireDoc.galleryItems.length > 0) ? fireDoc.galleryItems : (localDoc.galleryItems || []),
-              gallery: (fireDoc.gallery && fireDoc.gallery.length > 0) ? fireDoc.gallery : (localDoc.gallery || []),
-              videos: (fireDoc.videos && fireDoc.videos.length > 0) ? fireDoc.videos : (localDoc.videos || []),
-              certificates: (fireDoc.certificates && fireDoc.certificates.length > 0) ? fireDoc.certificates : (localDoc.certificates || []),
-              reviews: (fireDoc.reviews && fireDoc.reviews.length > 0) ? fireDoc.reviews : (localDoc.reviews || []),
-              branches: (fireDoc.branches && fireDoc.branches.length > 0) ? fireDoc.branches : (localDoc.branches || []),
-              patients: (fireDoc.patients && fireDoc.patients.length > 0) ? fireDoc.patients : (localDoc.patients || []),
-              features: fireDoc.features ? {
-                ...localDoc.features,
-                ...fireDoc.features
-              } : localDoc.features
-            });
-            map.set(fireDoc.id, mergedDoc);
-          }
-        });
-        const merged = Array.from(map.values()).map(d => sanitizeDoctorDates(d));
-        try {
-          localStorage.setItem('dr_doctors', JSON.stringify(merged));
-        } catch (e) {}
-        return merged;
+        return fireDocs.map(d => sanitizeDoctorDates(d));
       });
       // Automatically ensure every real doctor in the database is synced to Supabase
       fireDocs.forEach(doc => {
