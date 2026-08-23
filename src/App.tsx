@@ -484,52 +484,24 @@ export default function App() {
     }
   }, [appointments]);
 
-  // Fetch real data from Supabase on mount
+  // Fetch real data from Supabase on mount - OPTIMIZED: Only fetch initial config/specialties if needed, fetch doctor/appointments on-demand or with pagination.
   useEffect(() => {
-    const loadSupabaseData = async () => {
+    const loadCoreData = async () => {
       try {
-        const supaDocs = await fetchDoctorsFromSupabase();
-        if (supaDocs && supaDocs.length > 0) {
-          setDoctors(prev => {
-            const map = new Map<string, Doctor>();
-            prev.forEach(d => map.set(d.id, d));
-            supaDocs.map(d => sanitizeDoctorDates(d)).forEach(d => map.set(d.id, d));
-            const merged = Array.from(map.values()).map(d => sanitizeDoctorDates(d));
-            localStorage.setItem('dr_doctors', JSON.stringify(merged));
-            return merged;
-          });
-        }
-
-        const supaApts = await fetchAppointmentsFromSupabase();
-        if (supaApts && supaApts.length > 0) {
-          setAppointments(prev => {
-            const map = new Map<string, Appointment>();
-            prev.forEach(a => map.set(a.id, a));
-            supaApts.forEach(a => map.set(a.id, a));
-            const merged = Array.from(map.values());
-            localStorage.setItem('dr_appointments', JSON.stringify(merged));
-            return merged;
-          });
-        }
-
+        // Just fetch essential data initially.
         const supaConfig = await fetchLandingConfigFromSupabase();
         if (supaConfig) {
           const sanitized = sanitizeLandingConfig(supaConfig);
           setLandingConfig(sanitized);
           localStorage.setItem('dr_landing_config', JSON.stringify(sanitized));
         }
-
-        const supaBanners = await fetchBannersFromSupabase();
-        if (supaBanners && supaBanners.length > 0) {
-          setDoctorBanners(supaBanners);
-          localStorage.setItem('dr_banners', JSON.stringify(supaBanners));
-        }
       } catch (err) {
-        console.warn('Error loading Supabase data on mount:', err);
+        console.warn('Error loading core data on mount:', err);
       }
     };
-    loadSupabaseData();
+    loadCoreData();
   }, []);
+
 
   // Firestore Real-time Subscriptions and Auto-seeding
   useEffect(() => {
