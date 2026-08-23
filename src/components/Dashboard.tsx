@@ -234,77 +234,15 @@ export default function Dashboard({
       const saved = localStorage.getItem(`doctor_patients_${doctor.id}`);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed)) return parsed;
       }
-      if (doctor.patients && Array.isArray(doctor.patients) && doctor.patients.length > 0) {
+      if (doctor.patients && Array.isArray(doctor.patients)) {
         return doctor.patients;
       }
     } catch (e) {
       console.error(e);
     }
-    // Default initial sample patient records
-    const today = new Date().toISOString().slice(0, 10);
-    return [
-      {
-        id: 'pat-1',
-        doctorId: doctor.id,
-        patientName: 'محمد علي إبراهيم',
-        patientPhone: '01012345678',
-        whatsappNumber: '01012345678',
-        age: '38',
-        gender: 'ذكر',
-        notes: 'يعاني من حساسية خفيفة تجاه مركبات البنسلين - ضغط متذبذب',
-        consultations: [
-          {
-            id: 'c-101',
-            type: 'consultation',
-            date: today,
-            time: '06:30 م',
-            diagnosis: 'التهاب حاد بالحلق واللوزتين مع ارتفاع درجات الحرارة',
-            prescription: 'أوجمنتين 1 جم (كبسول كل 12 ساعة) + بندول 500 ملجم عند اللزوم',
-            notes: 'تم التنبيه بضرورة الراحة التامة وشرب السوائل الدافئة.',
-            fee: '300',
-            createdAt: new Date().toISOString()
-          },
-          {
-            id: 'c-102',
-            type: 'followup',
-            date: new Date(Date.now() - 3 * 86400000).toISOString().slice(0, 10),
-            time: '07:00 م',
-            diagnosis: 'استقرار درجة الحرارة وتحسن ملحوظ في حالة الحلق',
-            prescription: 'الاستمرار على العلاج المحدد حتى نهاية الجرعة',
-            notes: 'حالة مستقرة.',
-            fee: '100',
-            createdAt: new Date(Date.now() - 3 * 86400000).toISOString()
-          }
-        ],
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'pat-2',
-        doctorId: doctor.id,
-        patientName: 'سارة أحمد محمود',
-        patientPhone: '01198765432',
-        whatsappNumber: '01198765432',
-        age: '29',
-        gender: 'أنثى',
-        notes: 'متابعة دورية للفحوصات العامة ورعاية الحمل',
-        consultations: [
-          {
-            id: 'c-103',
-            type: 'consultation',
-            date: new Date(Date.now() - 86400000).toISOString().slice(0, 10),
-            time: '05:00 م',
-            diagnosis: 'متابعة حمل روتينية - نتائج التحاليل والضغط مستقرة',
-            prescription: 'فيتامين هيدرا + فبيتال حديد كبسول مرة يومياً بعد الأكل',
-            notes: 'متابعة السونار القادمة بعد شهر.',
-            fee: '350',
-            createdAt: new Date(Date.now() - 86400000).toISOString()
-          }
-        ],
-        createdAt: new Date().toISOString()
-      }
-    ];
+    return [];
   });
 
   // Keep localStorage and doctor synced whenever patientRecords change

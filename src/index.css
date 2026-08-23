@@ -149,3 +149,9 @@ img, svg, picture, [data-prevent-save] {
   animation: premium-badge-pulse 2.5s ease-in-out infinite;
 }
 
+.high-quality-img {
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+}
+

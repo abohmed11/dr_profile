@@ -2,16 +2,16 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import multer from "multer";
-import admin from "firebase-admin";
+import * as admin from "firebase-admin";
 import { getStorage } from "firebase-admin/storage";
 
 // Initialize Firebase Admin lazily
 let storage: any;
 function getFirebaseStorage() {
   if (!storage) {
-    if (!admin.apps.length) {
+    if (!(admin as any).apps.length) {
       admin.initializeApp({
-        credential: admin.credential.applicationDefault(),
+        credential: (admin as any).credential.applicationDefault(),
         storageBucket: "gen-lang-client-0776754138.firebasestorage.app"
       });
     }

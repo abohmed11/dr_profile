@@ -1175,13 +1175,13 @@ export default function DoctorProfile({
             }}
           >
             {doctor.headerAvatar || doctor.avatar ? (
-              <div className="image-container">
+              <div className="w-full h-full flex items-center justify-center bg-white">
                 <img 
                   src={doctor.headerAvatar || doctor.avatar} 
                   alt={doctor.headerDisplayName || doctor.name} 
                   loading="eager"
                   decoding="async"
-                  className="high-res-img"
+                  className="w-full h-full object-contain object-center high-quality-img"
                 />
               </div>
             ) : (
@@ -1522,9 +1522,9 @@ export default function DoctorProfile({
                   alt={doctor.name} 
                   loading="eager"
                   decoding="async"
-                  width="360"
-                  height="360"
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  width="800"
+                  height="800"
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105 high-quality-img"
                 />
                 {/* Subtle gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
@@ -1883,7 +1883,7 @@ export default function DoctorProfile({
                                 decoding="async"
                                 width="320"
                                 height="180"
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 high-quality-img" 
                               />
                             </div>
                           ) : (
@@ -1944,9 +1944,9 @@ export default function DoctorProfile({
                             alt={photo.title} 
                             loading="lazy"
                             decoding="async"
-                            width="400"
-                            height="320"
-                            className="w-full h-full object-cover rounded-none pointer-events-none select-none group-hover:scale-105 transition-transform duration-500" 
+                            width="600"
+                            height="500"
+                            className="w-full h-full object-cover rounded-none pointer-events-none select-none group-hover:scale-105 transition-transform duration-500 high-quality-img" 
                           />
                         </div>
 
@@ -2609,37 +2609,30 @@ export default function DoctorProfile({
         <div className="max-w-7xl mx-auto px-6 flex flex-col items-center justify-center text-center space-y-5 md:space-y-6">
           
           {/* Clickable Resized Logo Image with Hover Animation (Navigates to Main Portal) */}
-          {!isDoctorWhiteLabel && (
-            <button 
-              onClick={onBackToPortal}
-              className="group cursor-pointer outline-none focus:outline-none transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 active:scale-95 my-1"
-              title={t.backToHome}
-            >
-              <img 
-                src="https://k.top4top.io/p_38573eitn0.png" 
-                alt="لوجو منصة بروفايلي" 
-                loading="lazy"
-                decoding="async"
-                width="160"
-                height="64"
-                className="h-14 sm:h-16 md:h-20 w-auto object-contain filter drop-shadow-md group-hover:drop-shadow-2xl transition-all duration-300 group-hover:brightness-110"
-              />
-            </button>
-          )}
+          <button 
+            onClick={onBackToPortal}
+            className="group cursor-pointer outline-none focus:outline-none transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 active:scale-95 my-1"
+            title={t.backToHome}
+          >
+            <img 
+              src="https://k.top4top.io/p_38573eitn0.png" 
+              alt="لوجو منصة بروفايلي" 
+              loading="lazy"
+              decoding="async"
+              width="160"
+              height="64"
+              className="h-14 sm:h-16 md:h-20 w-auto object-contain filter drop-shadow-md group-hover:drop-shadow-2xl transition-all duration-300 group-hover:brightness-110"
+            />
+          </button>
 
           {/* Copyright Notice */}
           <p 
             className="text-[11px] font-semibold"
             style={{ color: themeTextColor, opacity: 0.75 }}
           >
-            {isDoctorWhiteLabel 
-              ? (currentLang === 'en'
-                  ? `${t.allRightsReserved} © ${new Date().getFullYear()} - Dr. ${doctor.nameEn || doctor.name} Clinic`
-                  : `جميع الحقوق محفوظة © ${new Date().getFullYear()} - عيادة د. ${doctor.name}`)
-              : (currentLang === 'en'
-                  ? `${t.allRightsReserved} © ${new Date().getFullYear()}`
-                  : `جميع الحقوق محفوظة © ${new Date().getFullYear()}`)
-            }
+            {currentLang === 'en'
+              ? `${t.allRightsReserved} © ${new Date().getFullYear()} - Dr. Profile Platform`
+              : `جميع الحقوق محفوظة © ${new Date().getFullYear()} - منصة دكتور بروفايل`}
           </p>
 
           {/* Centered Social Media Icons (Enlarged circles with 25% border transparency) */}
