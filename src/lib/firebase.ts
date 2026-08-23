@@ -275,15 +275,7 @@ export async function saveDoctorInDb(doctor: Doctor): Promise<void> {
         handleFirestoreError(docErr, OperationType.WRITE, `${DOCTORS_COL}/${doctor.id}`);
         return;
       }
-      console.warn('Full doctor save to Firestore failed, attempting lighter fallback:', docErr);
-      const lighterDoc = {
-        ...cleanDoc,
-        gallery: (cleanDoc.gallery || []).slice(0, 3),
-        galleryItems: (cleanDoc.galleryItems || []).slice(0, 3),
-        reviews: (cleanDoc.reviews || []).slice(0, 5),
-        patients: (cleanDoc.patients || []).slice(0, 10),
-      };
-      await setDoc(docRef, lighterDoc, { merge: true });
+      console.error('Full doctor save to Firestore failed, not applying dangerous truncation:', docErr);
     }
   } catch (error) {
     handleFirestoreError(error, OperationType.WRITE, `${DOCTORS_COL}/${doctor.id}`);
