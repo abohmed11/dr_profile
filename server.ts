@@ -87,9 +87,16 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
-    app.get("*", (_req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
+    // Serve static files
+    app.use(express.static(distPath, { index: false }));
+    
+    // Fallback to index.html for any other request that isn't an API route
+    app.use((req, res, next) => {
+      if (req.path.startsWith("/api")) {
+        next();
+      } else {
+        res.sendFile(path.join(distPath, "index.html"));
+      }
     });
   }
 
