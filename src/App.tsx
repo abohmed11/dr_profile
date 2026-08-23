@@ -2124,13 +2124,6 @@ export default function App() {
                     appointments={appointments}
                     banners={doctorBanners}
                     onUpdateDoctor={(updatedDoc) => {
-                      setDoctors(prev => {
-                        const nextDocs = prev.map(d => d.id === updatedDoc.id ? updatedDoc : d);
-                        try {
-                          localStorage.setItem('dr_doctors', JSON.stringify(nextDocs));
-                        } catch (e) {}
-                        return nextDocs;
-                      });
                       saveDoctorInDb(updatedDoc);
                       saveDoctorToSupabase(updatedDoc);
                     }}
