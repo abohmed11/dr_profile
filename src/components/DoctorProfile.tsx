@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
+import { subscribeDoctorById } from '../lib/firebase';
 import { Doctor, Appointment, Review, DoctorFeatures, DEFAULT_DOCTOR_FEATURES, DoctorCertificate, Branch, Service, getThemeTextColor, getThemeTemplate } from '../types';
 import { DoctorCardExport } from './DoctorCardExport';
 import { 
@@ -392,7 +393,8 @@ function ThemePatternWatermark({
 }
 
 interface DoctorProfileProps {
-  doctor: Doctor | null | undefined;
+  doctorId?: string; // Add optional doctorId
+  doctor?: Doctor | null | undefined;
   appointments: Appointment[];
   onAddAppointment: (newApt: Appointment) => void;
   onAddReview: (doctorId: string, newReview: Review) => void;
@@ -401,8 +403,19 @@ interface DoctorProfileProps {
 }
 
 export default function DoctorProfile({ 
-  doctor, appointments, onAddAppointment, onAddReview, onBackToPortal, isEmbeddedPreview = false
+  doctorId, doctor: initialDoctor, appointments, onAddAppointment, onAddReview, onBackToPortal, isEmbeddedPreview = false
 }: DoctorProfileProps) {
+  const [doctor, setDoctor] = useState<Doctor | null | undefined>(initialDoctor);
+
+  useEffect(() => {
+    if (doctorId) {
+      const unsub = subscribeDoctorById(doctorId, (docData) => {
+        setDoctor(docData);
+      });
+      return unsub;
+    }
+  }, [doctorId]);
+
   if (!doctor) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center bg-gray-50">

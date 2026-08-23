@@ -2203,6 +2203,7 @@ export default function App() {
 
             return (
               <DoctorProfile 
+                doctorId={currentDoctor.id}
                 doctor={currentDoctor}
                 appointments={appointments}
                 onAddAppointment={handleAddAppointment}

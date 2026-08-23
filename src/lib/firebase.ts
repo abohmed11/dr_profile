@@ -256,6 +256,30 @@ export function subscribeDoctors(onData: (doctors: Doctor[]) => void): () => voi
   }
 }
 
+export function subscribeDoctorById(doctorId: string, onData: (doctor: Doctor | null) => void): () => void {
+  if (!db || isFirestoreQuotaExceeded) return () => {};
+  const docRef = doc(db, DOCTORS_COL, doctorId);
+  try {
+    return onSnapshot(
+      docRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          onData({ id: snapshot.id, ...snapshot.data() } as Doctor);
+        } else {
+          onData(null);
+        }
+      },
+      (error) => {
+        handleFirestoreError(error, OperationType.GET, DOCTORS_COL);
+        onData(null);
+      }
+    );
+  } catch (err) {
+    handleFirestoreError(err, OperationType.GET, DOCTORS_COL);
+    return () => {};
+  }
+}
+
 export async function saveDoctorInDb(doctor: Doctor): Promise<void> {
   // Always sync with Supabase Cloud Database regardless of Firestore quota
   saveDoctorToSupabase(doctor).catch((err) => {
