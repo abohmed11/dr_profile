@@ -266,7 +266,9 @@ export async function saveDoctorInDb(doctor: Doctor): Promise<void> {
   try {
     const docRef = doc(db, DOCTORS_COL, doctor.id);
     // Compress images to high quality (600x600, 0.8) to preserve resolution while fitting Firestore 1MB limit
-    const cleanDoc = await compressObjectImages(doctor, 600, 600, 0.8);
+    // const cleanDoc = await compressObjectImages(doctor, 600, 600, 0.8);
+    // Directly save to debug if compression is causing issues
+    const cleanDoc = doctor;
     
     try {
       await setDoc(docRef, cleanDoc, { merge: true });
