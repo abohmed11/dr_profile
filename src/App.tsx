@@ -2025,7 +2025,7 @@ export default function App() {
         {currentView === 'dashboard' && (currentUserRole === 'doctor' || currentUserRole === 'secretary') && currentDoctorId && (
           (() => {
             const loggedDoctor = doctors.find(d => d.id === currentDoctorId);
-            if (!loggedDoctor) return <div className="p-12 text-center">خطأ في استيراد بيانات الطبيب.</div>;
+            if (!loggedDoctor) return <div className="p-12 text-center">جاري تحميل بيانات لوحة التحكم...</div>;
             
             const loggedSecretary = currentUserRole === 'secretary' && currentSecretaryId && loggedDoctor.secretaries
               ? loggedDoctor.secretaries.find(s => s.id === currentSecretaryId) || null
