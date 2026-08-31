@@ -534,63 +534,10 @@ export default function DoctorProfile({
   // Clinic Photo Lightbox Preview State
   const [selectedClinicPhoto, setSelectedClinicPhoto] = useState<{ url: string; title: string } | null>(null);
 
-  // Clinic Gallery Photos (4 large top photos, 4 smaller bottom photos)
-  const clinicLargePhotos = [
-    {
-      id: 'c1',
-      title: 'الاستقبال الرئيسي ومدخل العيادة',
-      imageUrl: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1200'
-    },
-    {
-      id: 'c2',
-      title: 'غرفة الكشف والتجهيزات الطبية',
-      imageUrl: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200'
-    },
-    {
-      id: 'c3',
-      title: 'غرفة المناظير والجراحة المعقمة',
-      imageUrl: 'https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?auto=format&fit=crop&q=80&w=1200'
-    },
-    {
-      id: 'c4',
-      title: 'منطقة الانتظار والعناية بالأطفال',
-      imageUrl: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=1200'
-    }
-  ];
-
-  const clinicSmallPhotos = [
-    {
-      id: 'cs1',
-      title: 'الممرات الداخلية والتعقيم',
-      imageUrl: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-      id: 'cs2',
-      title: 'أجهزة التشخيص والمناظير الدقيقة',
-      imageUrl: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-      id: 'cs3',
-      title: 'غرفة المتابعة والعناية المركزة',
-      imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-      id: 'cs4',
-      title: 'وحدة الفحوصات والتحاليل الطبية',
-      imageUrl: 'https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=800'
-    }
-  ];
-
   // Selected Branch for Contact Section
   const [selectedBranchId, setSelectedBranchId] = useState(doctor.branches[0]?.id || 'b1');
 
-  const activeBranch = doctor.branches.find(b => b.id === selectedBranchId) || doctor.branches[0] || {
-    id: 'b1',
-    name: 'فرع العيادة الرئيسي',
-    address: 'العنوان غير محدد بالتفصيل',
-    phone: doctor.phone || '٠١١٤١٥٤١٠٣٠',
-    workingHours: 'الأحد - الثلاثاء - الخميس من ٨-١٠ مساءً'
-  };
+  const activeBranch = doctor.branches.find(b => b.id === selectedBranchId) || doctor.branches[0] || null;
 
   const certs: DoctorCertificate[] = (doctor.certificates && doctor.certificates.length > 0)
     ? doctor.certificates.map((cert: any, idx: number) => {
@@ -1217,13 +1164,16 @@ export default function DoctorProfile({
   // Find the address of the selected active branch inside the doctor's side card
   const displayBranches = React.useMemo(() => {
     if (doctor.branches && doctor.branches.length > 0) return doctor.branches;
-    return [{
-      id: 'main-clinic',
-      name: currentLang === 'en' ? 'Main Clinic' : 'العيادة الرئيسية',
-      address: doctor.address ? (currentLang === 'en' ? translateClinicAddress(doctor.address) : doctor.address) : (currentLang === 'en' ? 'Main Address' : 'العنوان الرئيسي'),
-      phone: doctor.phone || '',
-      workingHoursList: doctor.workingHours || []
-    }];
+    if (doctor.address && doctor.address.trim() !== '') {
+      return [{
+        id: 'main-clinic',
+        name: currentLang === 'en' ? 'Main Clinic' : 'العيادة الرئيسية',
+        address: currentLang === 'en' ? translateClinicAddress(doctor.address) : doctor.address,
+        phone: doctor.phone || '',
+        workingHoursList: doctor.workingHours || []
+      }];
+    }
+    return [];
   }, [doctor.branches, doctor.address, doctor.phone, doctor.workingHours, currentLang]);
 
   const activeCardBranchIdValue = activeCardBranchId || displayBranches[0]?.id;
@@ -1666,12 +1616,10 @@ export default function DoctorProfile({
                     : doctor.jobTitle}
                 </p>
 
-                {/* 3. Rating & Stars (النجوم والتقييم) */}
-                {(() => {
+                {/* 3. Rating & Stars (النجوم والتقييم) - Only if real reviews exist */}
+                {doctor.reviews && doctor.reviews.length > 0 && (() => {
                   const reviewsCount = doctor.reviews.length;
-                  const avgRating = reviewsCount > 0 
-                    ? (doctor.reviews.reduce((acc, r) => acc + r.rating, 0) / reviewsCount).toFixed(1)
-                    : '4.9';
+                  const avgRating = (doctor.reviews.reduce((acc, r) => acc + r.rating, 0) / reviewsCount).toFixed(1);
                   return (
                     <div className="flex items-center justify-center gap-1.5 bg-amber-50/60 px-3.5 py-1 rounded-full">
                       <div className="flex items-center gap-0.5">
@@ -1680,7 +1628,7 @@ export default function DoctorProfile({
                         ))}
                       </div>
                       <span className="text-xs font-black text-amber-800 pr-1">{avgRating}</span>
-                      <span className="text-[10px] text-neutral-400 font-bold">({reviewsCount || 12} {t.ratingCount})</span>
+                      <span className="text-[10px] text-neutral-400 font-bold">({reviewsCount} {t.ratingCount})</span>
                     </div>
                   );
                 })()}
@@ -1887,7 +1835,7 @@ export default function DoctorProfile({
                 )}
 
                 {/* Primary Booking/Call Buttons (تحت الخريطة) */}
-                <div className="w-full grid grid-cols-2 gap-2.5 pt-1">
+                <div className={`w-full grid ${doctor.phone && doctor.phone.trim() !== '' ? 'grid-cols-2' : 'grid-cols-1'} gap-2.5 pt-1`}>
                   <a 
                     href="#booking-section"
                     onClick={(e) => {
@@ -1900,13 +1848,15 @@ export default function DoctorProfile({
                     <Calendar className="w-3.5 h-3.5" style={{ color: themeTextColor }} />
                     <span>{t.booking}</span>
                   </a>
-                  <a 
-                    href={`tel:${doctor.phone}`}
-                    className="w-full py-3 bg-white hover:bg-neutral-50 text-neutral-700 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 border border-slate-200/80 shadow-xs"
-                  >
-                    <Phone className="w-3.5 h-3.5 text-neutral-500" />
-                    <span>{t.callNow}</span>
-                  </a>
+                  {doctor.phone && doctor.phone.trim() !== '' && (
+                    <a 
+                      href={`tel:${doctor.phone}`}
+                      className="w-full py-3 bg-white hover:bg-neutral-50 text-neutral-700 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 border border-slate-200/80 shadow-xs"
+                    >
+                      <Phone className="w-3.5 h-3.5 text-neutral-500" />
+                      <span>{t.callNow}</span>
+                    </a>
+                  )}
                 </div>
 
               </div>
