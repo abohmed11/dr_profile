@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { subscribeDoctorById } from '../lib/firebase';
+import { ProfileSkeleton } from './ProfileSkeleton';
 import { Doctor, Appointment, Review, DoctorFeatures, DEFAULT_DOCTOR_FEATURES, DoctorCertificate, Branch, Service, getThemeTextColor, getThemeTemplate } from '../types';
 import { DoctorCardExport } from './DoctorCardExport';
 import { 
@@ -406,6 +407,7 @@ export default function DoctorProfile({
   doctorId, doctor: initialDoctor, appointments, onAddAppointment, onAddReview, onBackToPortal, isEmbeddedPreview = false
 }: DoctorProfileProps) {
   const [doctor, setDoctor] = useState<Doctor | null | undefined>(initialDoctor);
+  const [isLoading, setIsLoading] = useState(!initialDoctor);
 
   useEffect(() => {
     let isMounted = true;
@@ -413,14 +415,8 @@ export default function DoctorProfile({
     // 1. Try Firestore
     const unsub = subscribeDoctorById(doctorId, (docData) => {
       if (isMounted) {
-        if (docData) {
-          setDoctor(docData);
-        } else {
-          // If Firestore returns null, try Supabase fallback
-          fetchFromSupabase(doctorId).then(supaData => {
-            if (isMounted && supaData) setDoctor(supaData);
-          });
-        }
+        setDoctor(docData);
+        setIsLoading(false);
       }
     });
 
@@ -428,7 +424,10 @@ export default function DoctorProfile({
     const timer = setTimeout(() => {
       if (isMounted && !doctor) {
         fetchFromSupabase(doctorId).then(supaData => {
-          if (isMounted && supaData) setDoctor(supaData);
+          if (isMounted) {
+            setDoctor(supaData);
+            setIsLoading(false);
+          }
         });
       }
     }, 3000);
@@ -492,11 +491,14 @@ export default function DoctorProfile({
     }
   };
 
+  if (isLoading) {
+    return <ProfileSkeleton />;
+  }
+  
   if (!doctor) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center bg-gray-50">
-         <div className="w-16 h-16 border-4 border-t-blue-500 border-gray-200 rounded-full animate-spin"></div>
-         <p className="mt-4 text-xl font-bold text-gray-700">جاري تحميل البيانات...</p>
+         <p className="text-xl font-bold text-gray-700">عذراً، لم يتم العثور على الطبيب.</p>
       </div>
     );
   }
