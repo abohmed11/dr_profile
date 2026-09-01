@@ -1166,6 +1166,7 @@ export default function App() {
   // Render logic
   return (
     <div className="w-full min-h-screen bg-white text-neutral-900 selection:bg-black selection:text-white" dir="rtl">
+      <div className="fixed top-0 left-0 z-[9999] bg-red-500 text-white p-4">DEBUG: APP RENDERING</div>
       
       {/* 1. LANDING VIEW */}
       {currentView === 'landing' && (
