@@ -257,7 +257,6 @@ const sanitizeLandingConfig = (config: LandingPageConfig): LandingPageConfig => 
 
 
 export default function App() {
-  console.log("DEBUG: App Component Body Executing");
   // Auth state initialized from localStorage so session survives browser reloads
   const [currentUserRole, setCurrentUserRole] = useState<'admin' | 'doctor' | 'secretary' | null>(() => {
     try {
@@ -331,7 +330,17 @@ export default function App() {
   const [viewingDoctorEn, setViewingDoctorEn] = useState<string | null>(null);
 
   // Global dynamic states
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [doctors, setDoctors] = useState<Doctor[]>(() => {
+    try {
+      const saved = localStorage.getItem('dr_doctors');
+      if (saved) {
+        return JSON.parse(saved).map((d: any) => sanitizeDoctorDates(d));
+      }
+    } catch (e) {
+      console.error("Failed to load saved doctors", e);
+    }
+    return [];
+  });
 
   const [appointments, setAppointments] = useState<Appointment[]>(() => {
     try {
