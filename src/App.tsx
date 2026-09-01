@@ -257,6 +257,7 @@ const sanitizeLandingConfig = (config: LandingPageConfig): LandingPageConfig => 
 
 
 export default function App() {
+  console.log("DEBUG: App Component Body Executing");
   // Auth state initialized from localStorage so session survives browser reloads
   const [currentUserRole, setCurrentUserRole] = useState<'admin' | 'doctor' | 'secretary' | null>(() => {
     try {
@@ -1166,7 +1167,6 @@ export default function App() {
   // Render logic
   return (
     <div className="w-full min-h-screen bg-white text-neutral-900 selection:bg-black selection:text-white" dir="rtl">
-      <div className="fixed top-0 left-0 z-[9999] bg-red-500 text-white p-4">DEBUG: APP RENDERING</div>
       
       {/* 1. LANDING VIEW */}
       {currentView === 'landing' && (
@@ -2100,6 +2100,7 @@ export default function App() {
         )}
 
         {/* 5. LIVE PUBLIC DOCTOR PORTFOLIO VIEW */}
+        {console.log('App Render State:', { currentView, viewingDoctorEn, doctorsCount: doctors.length })}
         {currentView === 'dr' && viewingDoctorEn && (
           (() => {
             const cleanQuery = viewingDoctorEn.toLowerCase().trim().replace(/^[@/]+/, '').replace(/^dr\//, '').replace(/^dr-/, '');
