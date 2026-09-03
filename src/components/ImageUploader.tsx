@@ -55,10 +55,9 @@ export default function ImageUploader({ onUploadSuccess }: { onUploadSuccess: (u
     try {
       // Compress the image
       const options = {
-        maxSizeMB: 0.5, // 500KB target
-        maxWidthOrHeight: 1200,
         useWebWorker: true,
-        fileType: 'image/webp' // Force WebP conversion
+        fileType: 'image/webp',
+        initialQuality: 0.95
       };
       const compressedFile = await imageCompression(file, options);
       

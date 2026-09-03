@@ -1249,10 +1249,12 @@ export default function DoctorProfile({
               <div className="w-full h-full flex items-center justify-center bg-white">
                 <img 
                   src={doctor.headerAvatar || doctor.avatar} 
+                  srcSet={`${doctor.headerAvatar || doctor.avatar} 1x, ${doctor.headerAvatar || doctor.avatar} 2x`}
                   alt={doctor.headerDisplayName || doctor.name} 
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-contain object-center high-quality-img"
+                  style={{ imageRendering: '-webkit-optimize-contrast' } as React.CSSProperties}
                 />
               </div>
             ) : (
