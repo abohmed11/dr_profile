@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
-import { subscribeDoctorById } from '../lib/firebase';
+import { subscribeDoctorById, isFirestoreQuotaExceeded } from '../lib/firebase';
 import { ProfileSkeleton } from './ProfileSkeleton';
 import { Doctor, Appointment, Review, DoctorFeatures, DEFAULT_DOCTOR_FEATURES, DoctorCertificate, Branch, Service, getThemeTextColor, getThemeTemplate } from '../types';
 import { DoctorCardExport } from './DoctorCardExport';
@@ -413,15 +413,36 @@ export default function DoctorProfile({
     let isMounted = true;
     
     // 1. Try Firestore
-    const unsub = subscribeDoctorById(doctorId, (docData) => {
-      if (isMounted) {
-        setDoctor(docData);
-        setIsLoading(false);
-      }
-    });
+    let unsub = () => {};
+    if (!isFirestoreQuotaExceeded) {
+        unsub = subscribeDoctorById(doctorId, (docData) => {
+          if (isMounted) {
+            if (docData) {
+              setDoctor(docData);
+              setIsLoading(false);
+            } else {
+              // If firestore returns null, fallback to supabase
+              fetchFromSupabase(doctorId).then(supaData => {
+                if (isMounted) {
+                  setDoctor(supaData);
+                  setIsLoading(false);
+                }
+              });
+            }
+          }
+        });
+    } else {
+      // If quota exceeded, go straight to Supabase
+      fetchFromSupabase(doctorId).then(supaData => {
+        if (isMounted) {
+          setDoctor(supaData);
+          setIsLoading(false);
+        }
+      });
+    }
 
-    // 2. Fallback timeout for Supabase
-    const timer = setTimeout(() => {
+    // 2. Fallback timeout for Supabase (only if we didn't already trigger it)
+    const timer = !isFirestoreQuotaExceeded ? setTimeout(() => {
       if (isMounted && !doctor) {
         fetchFromSupabase(doctorId).then(supaData => {
           if (isMounted) {
@@ -430,13 +451,14 @@ export default function DoctorProfile({
           }
         });
       }
-    }, 3000);
+    }, 3000) : null;
 
     return () => {
       isMounted = false;
       unsub();
-      clearTimeout(timer);
+      if (timer) clearTimeout(timer);
     };
+
   }, [doctorId]);
 
   // Helper to fetch from Supabase
@@ -1228,7 +1250,7 @@ export default function DoctorProfile({
                 <img 
                   src={doctor.headerAvatar || doctor.avatar} 
                   alt={doctor.headerDisplayName || doctor.name} 
-                  loading="eager"
+                  loading="lazy"
                   decoding="async"
                   className="w-full h-full object-contain object-center high-quality-img"
                 />

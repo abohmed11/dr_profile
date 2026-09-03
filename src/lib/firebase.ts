@@ -331,6 +331,7 @@ export async function deleteDoctorFromDb(doctorId: string): Promise<void> {
 }
 
 export async function seedDoctorsIfEmpty(initialDoctors: Doctor[]): Promise<void> {
+  // Check again just before seeding
   if (isFirestoreQuotaExceeded || !db) return;
   try {
     const snapshot = await withFirestoreTimeout(getDocs(collection(db, DOCTORS_COL)));

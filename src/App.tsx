@@ -329,6 +329,17 @@ export default function App() {
   // Public viewing slug/English username (e.g. "mohamed-jaber")
   const [viewingDoctorEn, setViewingDoctorEn] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (currentView === 'dr') {
+      const path = window.location.pathname.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      const slug = path.split('/dr/')[1] || path.split('/doctor/')[1] || hash.split('dr/')[1] || hash.split('doctor/')[1];
+      if (slug) {
+        setViewingDoctorEn(slug.split('/')[0]);
+      }
+    }
+  }, [currentView]);
+
   // Global dynamic states
   const [doctors, setDoctors] = useState<Doctor[]>(() => {
     try {
@@ -545,9 +556,19 @@ export default function App() {
 
     // Subscribe to Firestore collections in real-time
     const unsubDoctors = subscribeDoctors((fireDocs) => {
-      setDoctors(prev => {
-        return fireDocs.map(d => sanitizeDoctorDates(d));
-      });
+      if (fireDocs && fireDocs.length > 0) {
+        setDoctors(prev => {
+          return fireDocs.map(d => sanitizeDoctorDates(d));
+        });
+      } else {
+        // Fallback to Supabase if Firestore is empty or failing
+        fetchDoctorsFromSupabase().then(supabaseDocs => {
+          if (supabaseDocs && supabaseDocs.length > 0) {
+            setDoctors(supabaseDocs);
+          }
+        });
+      }
+      
       // Automatically ensure every real doctor in the database is synced to Supabase
       fireDocs.forEach(doc => {
         saveDoctorToSupabase(doc);

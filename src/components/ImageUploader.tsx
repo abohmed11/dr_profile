@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import imageCompression from 'browser-image-compression';
 
 export default function ImageUploader({ onUploadSuccess }: { onUploadSuccess: (url: string) => void }) {
   const [file, setFile] = useState<File | null>(null);
@@ -44,12 +45,34 @@ export default function ImageUploader({ onUploadSuccess }: { onUploadSuccess: (u
     }
   };
 
-  const handleFileSubmit = () => {
+  const handleFileSubmit = async () => {
     if (!file) return;
-    const formData = new FormData();
-    formData.append('file', file);
-    // Send file directly without compression to preserve quality
-    uploadFile(formData, '/api/upload');
+    
+    setIsUploading(true);
+    setUploadStatus('idle');
+    setErrorMessage('');
+    
+    try {
+      // Compress the image
+      const options = {
+        maxSizeMB: 0.5, // 500KB target
+        maxWidthOrHeight: 1200,
+        useWebWorker: true,
+        fileType: 'image/webp' // Force WebP conversion
+      };
+      const compressedFile = await imageCompression(file, options);
+      
+      const formData = new FormData();
+      // Ensure file name ends with .webp
+      const newFileName = compressedFile.name.replace(/\.[^/.]+$/, "") + ".webp";
+      formData.append('file', compressedFile, newFileName);
+      
+      await uploadFile(formData, '/api/upload');
+    } catch (err) {
+      setUploadStatus('error');
+      setErrorMessage('Failed to compress image');
+      setIsUploading(false);
+    }
   };
 
   const handleUrlSubmit = () => {
